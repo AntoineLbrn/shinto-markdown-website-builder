@@ -12,6 +12,10 @@ export function getStaticPaths() {
 }
 
 const { pokemon }: { pokemon: PokemonAPIPokemonParsed } = Astro.props;
+const vaultPokemon = (await getAstroStore()).vault.pokemons.find((file) => file.name.toLowerCase() === pokemon.nameFr?.toLowerCase() || file.name.toLowerCase() === pokemon.nameEn.toLowerCase());
+
 ---
 <div>Fiche du pokemon : {pokemon.nameFr || pokemon.nameEn}!</div>
 <img src={pokemon.sprite} alt={pokemon.nameEn} />
+<div>Annotations trouvées</div>
+<div>{vaultPokemon?.content}</div>

@@ -6,7 +6,7 @@ import type { PokemonAPIPokemonSpecies } from "../types/PokemonAPI/PokemonAPIPok
 export const fetchPokemonsData = async (): Promise<PokemonAPIPokemonParsed[]> => {
     const pokemonApiList: PokemonAPIPokemonList = await fetch("https://pokeapi.co/api/v2/pokemon/?limit=2000").then(res => res.json());
     const pokemonList: PokemonAPIPokemonParsed[] = [];
-    for (const pokemon of pokemonApiList.results.slice(0, 10)) {
+    for (const pokemon of pokemonApiList.results.slice(0, 25)) {
         const detailledPokemon: PokemonAPIDetailledPokemon = await fetch(pokemon.url).then(res => res.json());
         const pokemonSpecies: PokemonAPIPokemonSpecies = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.name}/`).then(res => res.json());
         pokemonList.push({
