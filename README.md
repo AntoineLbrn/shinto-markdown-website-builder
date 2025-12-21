@@ -1,46 +1,23 @@
-# Astro Starter Kit: Basics
+# Présentation
 
-```sh
-npm create astro@latest -- --template basics
-```
+Interface de consultation des liens entre la pop culture et les mythes et légendes du shintoïsme japonais.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Le but est d'avoir à la fois des informations quantitatives `/graphes`, et des données qualitatives qui explicitent ces liens de manière formelle (`/pokemon` par exemple)
 
-## 🚀 Project Structure
+Tout le travail d'indexation et de recherche se trouve ici : https://drive.google.com/drive/folders/1i0cv09CCcaZasBN5G9HAcruPHbytZ6LF?usp=sharing
 
-Inside of your Astro project, you'll see the following folders and files:
+# Visualisations quantitatives
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+TODO
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+# Approche qualitative
 
-## 🧞 Commands
+Tous les fichiers markdown peuvent être rendus tel quel par un composant d'affichage par défaut.
+Si jamais un type spécifique est trouvé (`Yokai`, `Pokemon`...), on fait appel à un composant d'affichage spécifique.
 
-All commands are run from the root of the project, from a terminal:
+## Pokemon
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- Récupération de la liste des Pokémon via PokeAPI.
+- Slugification et moteur de recherche
+- Liens avec le YokaiDex
+- etc... (TODO)
