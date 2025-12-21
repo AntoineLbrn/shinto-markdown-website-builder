@@ -1,0 +1,16 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getAstroStore, getPokemonSlug } from '../../lib/astroDataStore';
+
+const store = await getAstroStore();
+---
+
+<Layout>
+    <h1>Pokemon Search Engine Page</h1>
+    <ul>
+        {store.pokemons.map((pokemon) => (
+            <li>
+                <a href={`/pokemon/${getPokemonSlug(pokemon)}`}>{pokemon.nameFr || pokemon.nameEn}</a>
+            </li>
+        ))}
+</Layout>
