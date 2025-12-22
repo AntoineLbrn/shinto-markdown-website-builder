@@ -1,0 +1,21 @@
+---
+import { getAstroStore, getStoreItemSlug, findJikanCharacterById } from '../../lib/astroDataStore';
+import type { BaseApiItem } from '../../types/BaseApiItem';
+
+export function getStaticPaths() {
+  return getAstroStore().then((store) => {
+    return store.onePiece.map((character: BaseApiItem) => ({
+      params: { slug: (getStoreItemSlug(character)) },
+      props: { character },
+    }));
+  });
+}
+
+const { character }: { character: BaseApiItem } = Astro.props;
+const vaultCharacter = findJikanCharacterById((await getAstroStore()).vault.onePieceItems, character.id);
+
+---
+<div>Fiche du personnage : {character.nameEn}!</div>
+<img src={character.sprite} alt={character.nameEn} />
+<div>Annotations trouvées</div>
+<div>{vaultCharacter?.content}</div>

@@ -1,8 +1,7 @@
-export interface PokemonAPIPokemonParsed {
-    id: number;
-    nameEn: string;
+import type { BaseApiItem } from "../BaseApiItem";
+
+export interface PokemonAPIPokemonParsed extends BaseApiItem {
     nameFr: string | null;
     nameJa: string | null;
-    sprite: string | null;
     color: string | null;
 }

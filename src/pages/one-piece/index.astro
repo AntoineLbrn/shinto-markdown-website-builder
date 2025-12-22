@@ -6,11 +6,11 @@ const store = await getAstroStore();
 ---
 
 <Layout>
-    <h1>Pokemon Search Engine Page</h1>
+    <h1>One piece Search Engine Page</h1>
     <ul>
-        {store.pokemons.map((pokemon) => (
+        {store.onePiece.map((character) => (
             <li>
-                <a href={`/pokemon/${getStoreItemSlug(pokemon)}`}>{pokemon.nameFr || pokemon.nameEn}</a>
+                <a href={`/one-piece/${getStoreItemSlug(character)}`}>{character.nameEn}</a>
             </li>
         ))}
     </ul>

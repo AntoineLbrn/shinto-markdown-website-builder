@@ -1,18 +1,18 @@
 ---
-import { getAstroStore, getPokemonSlug } from '../../lib/astroDataStore';
+import { getAstroStore, getStoreItemSlug } from '../../lib/astroDataStore';
 import type { PokemonAPIPokemonParsed } from '../../types/PokemonAPI/PokemonAPIPokemonParsed';
 
 export function getStaticPaths() {
   return getAstroStore().then((store) => {
     return store.pokemons.map((pokemon: PokemonAPIPokemonParsed) => ({
-      params: { slug: getPokemonSlug(pokemon) },
+      params: { slug: (getStoreItemSlug(pokemon)) },
       props: { pokemon },
     }));
   });
 }
 
 const { pokemon }: { pokemon: PokemonAPIPokemonParsed } = Astro.props;
-const vaultPokemon = (await getAstroStore()).vault.pokemons.find((file) => file.name.toLowerCase() === pokemon.nameFr?.toLowerCase() || file.name.toLowerCase() === pokemon.nameEn.toLowerCase());
+const vaultPokemon = (await getAstroStore()).vault.pokemons.find((file) => file.data["nom technique"] === pokemon.nameEn);
 
 ---
 <div>Fiche du pokemon : {pokemon.nameFr || pokemon.nameEn}!</div>
