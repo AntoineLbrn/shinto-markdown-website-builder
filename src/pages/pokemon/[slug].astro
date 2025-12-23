@@ -1,21 +1,31 @@
 ---
-import { getAstroStore, getStoreItemSlug } from '../../lib/astroDataStore';
-import type { PokemonAPIPokemonParsed } from '../../types/PokemonAPI/PokemonAPIPokemonParsed';
+import IntelligentText from "../../components/IntelligentText.astro";
+import Properties from "../../components/Properties.astro";
+import { pokemonExternalIdKey } from "../../consts";
+import Layout from "../../layouts/Layout.astro";
+import { getAstroStore, getStoreApiItemSlug } from "../../lib/astroDataStore";
+import type { PokemonAPIPokemonParsed } from "../../types/PokemonAPI/PokemonAPIPokemonParsed";
 
 export function getStaticPaths() {
   return getAstroStore().then((store) => {
     return store.pokemons.map((pokemon: PokemonAPIPokemonParsed) => ({
-      params: { slug: (getStoreItemSlug(pokemon)) },
+      params: { slug: getStoreApiItemSlug(pokemon) },
       props: { pokemon },
     }));
   });
 }
 
 const { pokemon }: { pokemon: PokemonAPIPokemonParsed } = Astro.props;
-const vaultPokemon = (await getAstroStore()).vault.pokemons.find((file) => file.data["nom technique"] === pokemon.nameEn);
-
+const vaultPokemon = (await getAstroStore()).vault.pokemons.find(
+  (file) => file.data[pokemonExternalIdKey] === pokemon.nameEn,
+);
 ---
-<div>Fiche du pokemon : {pokemon.nameFr || pokemon.nameEn}!</div>
-<img src={pokemon.sprite} alt={pokemon.nameEn} />
-<div>Annotations trouvées</div>
-<div>{vaultPokemon?.content}</div>
+
+<Layout>
+  { vaultPokemon &&<Properties resource={vaultPokemon} /> }
+  <div>Fiche du pokemon : {pokemon.nameFr || pokemon.nameEn}!</div>
+  <img src={pokemon.sprite} alt={pokemon.nameEn} />
+  <div>Annotations trouvées</div>
+  <IntelligentText text={vaultPokemon?.content || ""} />
+</Layout>
+

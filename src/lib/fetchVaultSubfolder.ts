@@ -3,15 +3,29 @@ import path from "path";
 import matter from "gray-matter";
 import type { MarkdownVaultFile } from "./astroDataStore";
 
-export const fetchVaultSubfolder = async (folder: string): Promise<MarkdownVaultFile[]> => {
-    const dir = path.join(process.cwd(), "vault", folder);
-    const files = await fs.readdir(dir);
-    const mdFiles = files.filter(f => f.endsWith(".md"));
-    const results = await Promise.all(
-        mdFiles.map(async (filename) => {
-            const content = await fs.readFile(path.join(dir, filename), "utf-8");
-            return { name: path.parse(filename).name, content, data: matter(content).data };
-        })
-    );
+const vaultFolderName: string = "vault";
+
+async function getMarkdownFilesRecursively(dir: string): Promise<MarkdownVaultFile[]> {
+    let results: MarkdownVaultFile[] = [];
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+            results = results.concat(await getMarkdownFilesRecursively(fullPath));
+        } else if (entry.isFile() && entry.name.endsWith(".md")) {
+            const content = await fs.readFile(fullPath, "utf-8");
+            results.push({
+                name: path.parse(entry.name).name,
+                content: matter(content).content,
+                folder: path.dirname(fullPath).split(vaultFolderName)[1].replace(/^\/|\\/, ""),
+                data: matter(content).data
+            });
+        }
+    }
     return results;
+}
+
+export const fetchVaultSubfolder = async (folder: string): Promise<MarkdownVaultFile[]> => {
+    const dir = path.join(process.cwd(), vaultFolderName, folder);
+    return getMarkdownFilesRecursively(dir);
 };

@@ -1,0 +1,34 @@
+---
+interface Props {
+    text: string;
+}
+const { text }: Props = Astro.props;
+
+function renderIntelligentText(raw: string): string {
+    // Media wikilinks: ![[file.png]] => <img src="/vault/Images/file.png" alt="file.png" />
+    let html = raw.replace(/!\[\[([^\]]+)\]\]/g, (match, p1) => {
+        // You can adjust the path logic as needed
+        const filename = p1.trim();
+        // Try to guess if it's an image (png, jpg, jpeg, gif, svg, webp)
+        if (filename.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i)) {
+            return `<img src="/img/${filename}" alt="${filename}" style="max-width:100%;" />`;
+        }
+        // fallback: generic embed
+        return `<span class='media-embed'>${filename}</span>`;
+    });
+    // Wikilinks: [[Page Name]] => <a href="/resource/page-name">Page Name</a>
+    html = html.replace(/\[\[([^\]]+)\]\]/g, (match, p1) => {
+        const slug = p1.trim().toLowerCase().replace(/[^a-z0-9 -]/g, '').replace(/\s+/g, '-');
+        return `<a href="/resource/${slug}">${p1}</a>`;
+    });
+    // Bold: **text** => <strong>text</strong>
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    // Italic: *text* => <em>text</em>
+    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    // Newlines: \n => <br />
+    html = html.replace(/\n/g, '<br />');
+    return html;
+}
+---
+
+<span set:html={renderIntelligentText(text)} />

@@ -1,0 +1,19 @@
+---
+import type { MarkdownVaultFile } from "../lib/astroDataStore";
+import IntelligentText from "./IntelligentText.astro";
+interface Props {
+    resource: MarkdownVaultFile;
+}
+const { resource }: Props = Astro.props;
+---
+<div>
+    <!-- Properties component. Displays list of FrontMatter properties, and format it for specific dataytype -->
+    <h2>Properties</h2>
+    <ul>
+        {Object.entries(resource.data).map(([key, value]) => (
+            <li>
+                <strong>{key}:</strong> <IntelligentText text={Array.isArray(value) ? value.join(", ") : value + ""} /> 
+            </li>
+        ))}
+    </ul>
+</div>

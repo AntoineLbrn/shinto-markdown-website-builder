@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getAstroStore, getStoreItemSlug } from '../../lib/astroDataStore';
+import { getAstroStore, getStoreApiItemSlug } from '../../lib/astroDataStore';
 
 const store = await getAstroStore();
 ---
@@ -10,7 +10,7 @@ const store = await getAstroStore();
     <ul>
         {store.pokemons.map((pokemon) => (
             <li>
-                <a href={`/pokemon/${getStoreItemSlug(pokemon)}`}>{pokemon.nameFr || pokemon.nameEn}</a>
+                <a href={`/pokemon/${getStoreApiItemSlug(pokemon)}`}>{pokemon.nameFr || pokemon.nameEn}</a>
             </li>
         ))}
     </ul>

@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getAstroStore, getStoreItemSlug } from '../../lib/astroDataStore';
+import { getAstroStore, getStoreApiItemSlug } from '../../lib/astroDataStore';
 
 const store = await getAstroStore();
 ---
@@ -10,7 +10,7 @@ const store = await getAstroStore();
     <ul>
         {store.onePiece.map((character) => (
             <li>
-                <a href={`/one-piece/${getStoreItemSlug(character)}`}>{character.nameEn}</a>
+                <a href={`/one-piece/${getStoreApiItemSlug(character)}`}>{character.nameEn}</a>
             </li>
         ))}
     </ul>

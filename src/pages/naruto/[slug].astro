@@ -1,11 +1,11 @@
 ---
-import { getAstroStore, getStoreItemSlug, findJikanCharacterById } from '../../lib/astroDataStore';
+import { getAstroStore, getStoreApiItemSlug, findJikanCharacterById } from '../../lib/astroDataStore';
 import type { BaseApiItem } from '../../types/BaseApiItem';
 
 export function getStaticPaths() {
   return getAstroStore().then((store) => {
     return store.naruto.map((character: BaseApiItem) => ({
-      params: { slug: (getStoreItemSlug(character)) },
+      params: { slug: (getStoreApiItemSlug(character)) },
       props: { character },
     }));
   });

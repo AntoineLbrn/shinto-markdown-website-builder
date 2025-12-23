@@ -15,9 +15,14 @@ TODO
 Tous les fichiers markdown peuvent être rendus tel quel par un composant d'affichage par défaut.
 Si jamais un type spécifique est trouvé (`Yokai`, `Pokemon`...), on fait appel à un composant d'affichage spécifique.
 
-## Pokemon
-
-- Récupération de la liste des Pokémon via PokeAPI.
-- Slugification et moteur de recherche
+TODO: 
+- générer les backlinks dans les objets ts
+- beautify moteur de recherche
+- beautify pages (utf8, markdown reader ...)
+- homepage
 - Liens avec le YokaiDex
-- etc... (TODO)
+- unicité slug, ajouter id ?
+
+## Pokemon
+- Récupération de la liste des Pokémon via PokeAPI.
+

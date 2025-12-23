@@ -21,7 +21,8 @@ export async function getAstroStore() {
     vault: {
         pokemons: await fetchVaultSubfolder("Pokemon"),
         narutoItems: await fetchVaultSubfolder("Naruto"),
-        onePieceItems: await fetchVaultSubfolder("One piece")
+        onePieceItems: await fetchVaultSubfolder("One piece"),
+        resources: await fetchVaultSubfolder(""),
     }
   };
 
@@ -32,6 +33,7 @@ export interface MarkdownVaultFile {
     name: string;
     content: string;
     data: any;
+    folder: string;
 }
 
 export interface Store {
@@ -42,11 +44,25 @@ export interface Store {
         pokemons: MarkdownVaultFile[];
         narutoItems: MarkdownVaultFile[];
         onePieceItems: MarkdownVaultFile[];
+        resources: MarkdownVaultFile[];
     };
 }
 
-export const getStoreItemSlug = (item: BaseApiItem) => {
-    return item.nameEn;
+export const getStoreApiItemSlug = (item: BaseApiItem | undefined) => {
+    return item ? slugify(item.nameEn) : '';
+}
+
+export const getStoreVaultItemSlug = (item: MarkdownVaultFile) => {
+    return slugify(item.name);
+}
+
+export const slugify = (str: string) => {
+  str = str.replace(/^\s+|\s+$/g, ''); // trim leading/trailing white space
+  str = str.toLowerCase(); // convert string to lowercase
+  str = str.replace(/[^a-z0-9 -]/g, '') // remove any non-alphanumeric characters
+           .replace(/\s+/g, '-') // replace spaces with hyphens
+           .replace(/-+/g, '-'); // remove consecutive hyphens
+  return str;
 }
 
 export const findJikanCharacterById = (characters: MarkdownVaultFile[], id: number): MarkdownVaultFile | undefined => {

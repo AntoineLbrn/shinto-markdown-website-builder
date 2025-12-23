@@ -1,0 +1,64 @@
+---
+import IntelligentText from "../../components/IntelligentText.astro";
+import Properties from "../../components/Properties.astro";
+import {
+    jikanCharacterExternalIdKey,
+    narutoFolder,
+    onePieceFolder,
+    pokemonExternalIdKey,
+    pokemonFolder,
+} from "../../consts";
+import Layout from "../../layouts/Layout.astro";
+import {
+    getAstroStore,
+    type MarkdownVaultFile,
+    getStoreVaultItemSlug,
+    getStoreApiItemSlug,
+} from "../../lib/astroDataStore";
+
+export function getStaticPaths() {
+    return getAstroStore().then((store) => {
+        return store.vault.resources.map((resource: MarkdownVaultFile) => ({
+            params: { slug: getStoreVaultItemSlug(resource) },
+            props: { resource },
+        }));
+    });
+}
+
+const store = await getAstroStore();
+const { resource }: { resource: MarkdownVaultFile } = Astro.props;
+if (resource.folder === pokemonFolder) {
+    const slug = getStoreApiItemSlug(
+        store.pokemons.find(
+            (character) =>
+                character.nameEn == resource.data[pokemonExternalIdKey],
+        ),
+    );
+    if (slug) return Astro.redirect(`/pokemon/${slug}`);
+}
+if (resource.folder === narutoFolder) {
+    const slug = getStoreApiItemSlug(
+        store.naruto.find(
+            (character) =>
+                character.id == resource.data[jikanCharacterExternalIdKey],
+        ),
+    );
+    if (slug) return Astro.redirect(`/naruto/${slug}`);
+}
+if (resource.folder === onePieceFolder) {
+    const slug = getStoreApiItemSlug(
+        store.onePiece.find(
+            (character) =>
+                character.id == resource.data[jikanCharacterExternalIdKey],
+        ),
+    );
+    if (slug) return Astro.redirect(`/one-piece/${slug}`);
+}
+---
+
+<Layout>
+    {resource && <Properties resource={resource} />}
+
+    <div>Fiche de : {resource.name}!</div>
+    <IntelligentText text={resource?.content} />
+</Layout>
