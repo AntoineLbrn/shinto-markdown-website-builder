@@ -9,7 +9,9 @@ Tout le travail d'indexation et de recherche se trouve ici : https://drive.googl
 # Visualisations quantitatives
 
 - Vue généalogique des personnages du Kojiki
-- Réseaux des entités du folklore, et explicitation de leur lien avec la pop culture  
+- Réseaux des entités du folklore, et explicitation de leur lien avec la pop culture
+- vue chronologique des contes et légendes
+  
 # Approche qualitative
 
 Tous les fichiers markdown peuvent être rendus tel quel par un composant d'affichage par défaut.
