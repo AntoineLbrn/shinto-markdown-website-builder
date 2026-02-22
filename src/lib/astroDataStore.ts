@@ -34,6 +34,7 @@ export interface MarkdownVaultFile {
     content: string;
     data: any;
     folder: string;
+    slug: string;
 }
 
 export interface Store {
@@ -52,17 +53,25 @@ export const getStoreApiItemSlug = (item: BaseApiItem | undefined) => {
     return item ? slugify(item.nameEn) : '';
 }
 
-export const getStoreVaultItemSlug = (item: MarkdownVaultFile) => {
-    return slugify(item.name);
+export const slugify = (str: string) => {
+      return str
+    .normalize("NFD")                     // sépare accents
+    .replace(/[\u0300-\u036f]/g, "")      // enlève accents
+    .toLowerCase()
+    .replaceAll("/", "-")
+    .replace(/[^a-z0-9 -]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")                  // évite double --
+    .replace(/^-|-$/g, "");               // trim - début/fin
 }
 
-export const slugify = (str: string) => {
-  str = str.replace(/^\s+|\s+$/g, ''); // trim leading/trailing white space
-  str = str.toLowerCase(); // convert string to lowercase
-  str = str.replace(/[^a-z0-9 -]/g, '') // remove any non-alphanumeric characters
-           .replace(/\s+/g, '-') // replace spaces with hyphens
-           .replace(/-+/g, '-'); // remove consecutive hyphens
-  return str;
+export const slugifyWithFolder = (folder: string, name: string): string => {
+    return slugify(`${folder}/${name}`);
+}
+
+export const slugifyFromMarkdownWikilink = (str: string) => {
+    const target = str.split("|")[0];
+    return slugify(target)
 }
 
 export const findJikanCharacterById = (characters: MarkdownVaultFile[], id: number): MarkdownVaultFile | undefined => {

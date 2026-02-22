@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import matter from "gray-matter";
-import type { MarkdownVaultFile } from "./astroDataStore";
+import { slugifyWithFolder, type MarkdownVaultFile } from "./astroDataStore";
 
 const vaultFolderName: string = "vault";
 
@@ -18,7 +18,11 @@ async function getMarkdownFilesRecursively(dir: string): Promise<MarkdownVaultFi
                 name: path.parse(entry.name).name,
                 content: matter(content).content,
                 folder: path.dirname(fullPath).split(vaultFolderName)[1].replace(/^\/|\\/, ""),
-                data: matter(content).data
+                data: matter(content).data,
+                slug: slugifyWithFolder(
+                    path.dirname(fullPath).split(vaultFolderName)[1].replace(/^\/|\\/, ""),
+                    path.parse(entry.name).name,
+                )
             });
         }
     }

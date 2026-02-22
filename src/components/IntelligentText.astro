@@ -1,13 +1,19 @@
 ---
+import { slugifyFromMarkdownWikilink } from "../lib/astroDataStore";
+import {
+    DIRECT_IMAGE_REGEX_LINK,
+    filenameToImageFileUrl,
+    RESOURCE_LINK_REGEX,
+    wikiLinkToFilename,
+} from "../lib/filenameHelper";
+
 interface Props {
     text: string;
 }
 const { text }: Props = Astro.props;
 
 function renderIntelligentText(raw: string): string {
-    // Media wikilinks: ![[file.png]] => <img src="/vault/Images/file.png" alt="file.png" />
-    let html = raw.replace(/!\[\[([^\]]+)\]\]/g, (match, p1) => {
-        // You can adjust the path logic as needed
+    let html = raw.replace(DIRECT_IMAGE_REGEX_LINK, (match, p1) => {
         const filename = p1.trim();
         // Try to guess if it's an image (png, jpg, jpeg, gif, svg, webp)
         if (filename.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i)) {
@@ -16,17 +22,26 @@ function renderIntelligentText(raw: string): string {
         // fallback: generic embed
         return `<span class='media-embed'>${filename}</span>`;
     });
+
     // Wikilinks: [[Page Name]] => <a href="/resource/page-name">Page Name</a>
-    html = html.replace(/\[\[([^\]]+)\]\]/g, (match, p1) => {
-        const slug = p1.trim().toLowerCase().replace(/[^a-z0-9 -]/g, '').replace(/\s+/g, '-');
-        return `<a href="/resource/${slug}">${p1}</a>`;
+    html = html.replace(RESOURCE_LINK_REGEX, (match, p1) => {
+        if (p1.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i)) {
+            return `<a href="${filenameToImageFileUrl(wikiLinkToFilename(p1))}">${p1}</a>`;
+        }
+
+        const slug = slugifyFromMarkdownWikilink(p1);
+
+        // Display only filaneme without extension and path
+        return `<a href="/resource/${slug}">${p1.split("|")[0].split("/").pop()}</a>`;
     });
     // Bold: **text** => <strong>text</strong>
-    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
     // Italic: *text* => <em>text</em>
-    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    html = html.replace(/\*([^*]+)\*/g, "<em>$1</em>");
     // Newlines: \n => <br />
-    html = html.replace(/\n/g, '<br />');
+    html = html.replace(/\n/g, "<br />");
+
+    html = html.replace(/```[\s\S]*?```|`[^`]*`/g, "");
     return html;
 }
 ---

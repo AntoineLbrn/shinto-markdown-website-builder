@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+/* Charte graphique japonaise. 
+
+Papier Washi : #F2EDE3
+Vermillon : #D63A1E
+Encore Sumi : #1C1C1C
+
+*/
+body {
+    background-color: #F2EDE3;
+    color: #1C1C1C;
+}
+a {
+    color: #D63A1E;
+    text-decoration: none;
+}

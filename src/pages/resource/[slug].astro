@@ -1,4 +1,5 @@
 ---
+import Icon from "../../components/Icon.astro";
 import IntelligentText from "../../components/IntelligentText.astro";
 import Properties from "../../components/Properties.astro";
 import {
@@ -12,14 +13,13 @@ import Layout from "../../layouts/Layout.astro";
 import {
     getAstroStore,
     type MarkdownVaultFile,
-    getStoreVaultItemSlug,
     getStoreApiItemSlug,
 } from "../../lib/astroDataStore";
 
 export function getStaticPaths() {
     return getAstroStore().then((store) => {
         return store.vault.resources.map((resource: MarkdownVaultFile) => ({
-            params: { slug: getStoreVaultItemSlug(resource) },
+            params: { slug: resource.slug },
             props: { resource },
         }));
     });
@@ -56,9 +56,14 @@ if (resource.folder === onePieceFolder) {
 }
 ---
 
-<Layout>
-    {resource && <Properties resource={resource} />}
+<Layout title={resource.name}>
+    <div class="w-5/6 mx-auto mt-5">
+        <div class="inline-flex justify-between items-center w-full">
+            {resource && <Properties resource={resource} />}
+            {resource && <Icon resource={resource} />}
+        </div>
 
-    <div>Fiche de : {resource.name}!</div>
-    <IntelligentText text={resource?.content} />
+        <div>Fiche de : {resource.name}!</div>
+        <IntelligentText text={resource?.content} />
+    </div>
 </Layout>
