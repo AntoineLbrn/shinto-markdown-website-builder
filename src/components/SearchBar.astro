@@ -1,0 +1,7 @@
+---
+import { getAstroStore } from "../lib/astroDataStore";
+import SearchBarReact from "./SearchBar.tsx";
+const store = await getAstroStore();
+---
+
+<SearchBarReact client:load resources={store.vault.resources} />

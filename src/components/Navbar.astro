@@ -1,0 +1,39 @@
+---
+import SearchBar from "./SearchBar.astro";
+
+---
+<nav class="navbar">
+	<ul class="navbar-menu">
+		<li class="navbar-item">
+			<a href="/" class="navbar-link">Accueil</a>
+		</li>
+		<li class="navbar-item dropdown">
+			<a href="#" class="navbar-link">Shinto</a>
+			<ul class="dropdown-menu">
+				<li><a href="/shinto/kami">Kami</a></li>
+				<li><a href="/shinto/oni">Oni</a></li>
+				<li><a href="/shinto/yokai">Yokai</a></li>
+				<li><a href="/shinto/human">Humain</a></li>
+			</ul>
+		</li>
+		<li class="navbar-item dropdown">
+			<a href="#" class="navbar-link">Contes</a>
+			<ul class="dropdown-menu">
+				<li><a href="/tales/legends">Légendes</a></li>
+				<li><a href="/tales/folktales">Contes de Folklore</a></li>
+				<li><a href="/tales/historical">Contes Historiques</a></li>
+			</ul>
+		</li>
+		<li class="navbar-item dropdown">
+			<a href="#" class="navbar-link">Pop culture</a>
+			<ul class="dropdown-menu">
+				<li><a href="/pop/pokemon">Pokemon</a></li>
+				<li><a href="/pop/naruto">Naruto</a></li>
+				<li><a href="/pop/onepiece">One piece</a></li>
+			</ul>
+		</li>
+		<li class="navbar-item navbar-search">
+			<SearchBar />
+		</li>
+	</ul>
+</nav>

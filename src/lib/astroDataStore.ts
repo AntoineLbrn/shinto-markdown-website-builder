@@ -4,6 +4,7 @@ import type { PokemonAPIPokemonParsed } from '../types/PokemonAPI/PokemonAPIPoke
 import { fetchJikanData } from './fetchJikanData';
 import { fetchPokemonsData } from './fetchPokemonsData';
 import { fetchVaultSubfolder } from './fetchVaultSubfolder';
+import { filenameToImageFileUrl, RESOURCE_LINK_REGEX, wikiLinkToFilename } from './filenameHelper';
 
 let store: Store | null = null;
 
@@ -26,15 +27,63 @@ export async function getAstroStore() {
     }
   };
 
+  generateStoreBacklinks(store);
+
   return store;
+}
+
+const generateStoreBacklinks = (store: Store) => {
+    store.vault.resources.forEach(resource => {
+        const backlinks: Backlink[] = [];
+        const matches = [
+            ...resource.content.matchAll(RESOURCE_LINK_REGEX).map(match => ({property: "content", match})),
+            ...Object.entries(resource.data).map(([key, value]) => {
+                if (typeof value === "string") {
+                    return [...value.matchAll(RESOURCE_LINK_REGEX).map(match => ({property: key, match}))];
+                } else if (Array.isArray(value)) {
+                    // Si c'est un tableau, on cherche les liens dans chaque élément string
+                    return value.flatMap(v =>
+                        typeof v === "string"
+                            ? [...v.matchAll(RESOURCE_LINK_REGEX).map(match => ({property: key, match}))]
+                            : []
+                    );
+                }
+                return [];
+            }).flat()
+        ];
+        for (const match of matches) {
+            const p1 = match.match[1];
+            let linkedResource;
+            if (p1.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i)) {
+                linkedResource = store.vault.resources.find(
+                    r => r.slug === filenameToImageFileUrl(wikiLinkToFilename(p1))
+                );
+            } else {
+                linkedResource = store.vault.resources.find(
+                    r => r.slug === slugifyFromMarkdownWikilink(p1)
+                );
+            }
+            if (linkedResource) {
+                backlinks.push({ name: linkedResource.name, slug: linkedResource.slug, property: match.property });
+            }
+        }
+        resource.backlinks = backlinks;
+    });
+}
+
+export interface Backlink {
+    property: string;
+    name: string;
+    slug: string;
 }
 
 export interface MarkdownVaultFile {
     name: string;
     content: string;
-    data: any;
+    data: { [key: string]: any };
     folder: string;
     slug: string;
+    backlinks: Backlink[];
 }
 
 export interface Store {

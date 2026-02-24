@@ -1,4 +1,5 @@
 ---
+import Navbar from "../components/Navbar.astro";
 import "../styles/global.css";
 interface Props {
   title?: string;
@@ -17,6 +18,7 @@ const siteName = "Folklore Nippon";
 		    <title>{title ? `${title} | ${siteName}` : siteName}</title>
 	</head>
 	<body>
+		<Navbar />
 		<slot />
 	</body>
 </html>

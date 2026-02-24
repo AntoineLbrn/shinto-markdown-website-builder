@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getAstroStore, getStoreVaultItemSlug } from '../lib/astroDataStore';
+import { getAstroStore } from '../lib/astroDataStore';
 
 const store = await getAstroStore();
 ---
@@ -10,7 +10,7 @@ const store = await getAstroStore();
     <ul>
         {store.vault.resources.map((resource) => (
             <li>
-                <a href={`/resource/${getStoreVaultItemSlug(resource)}`}>{resource.name}</a>
+                <a href={`/resource/${resource.slug}`}>{resource.name}</a>
             </li>
         ))}
     </ul>

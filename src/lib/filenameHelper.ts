@@ -3,7 +3,6 @@ export const RESOURCE_LINK_REGEX = /\[\[([^\]]+)\]\]/g
 export const IMAGE_KEY = "image";
 
 export const filenameToImageFileUrl = (filename: string) => {
-    console.log("Converting filename to image URL:", filename);
     return `/img/${filename}`;
 }
 

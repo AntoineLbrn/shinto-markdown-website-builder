@@ -4,14 +4,141 @@
 
 Papier Washi : #F2EDE3
 Vermillon : #D63A1E
-Encore Sumi : #1C1C1C
-
+Encre Sumi : #1C1C1C
+Vert plantes sanctuaires mononoké : #556B2F
+Marron bois sanctuaires : #5A4634
 */
 body {
     background-color: #F2EDE3;
     color: #1C1C1C;
 }
+
 a {
     color: #D63A1E;
     text-decoration: none;
 }
+
+
+
+/*
+
+Navbar styles
+
+*/
+
+.navbar {
+    width: 100%;
+    background: #5A4634;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 0.5rem 1rem;
+}
+
+.navbar-menu {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-item {
+    position: relative;
+    margin-right: 1.5rem;
+}
+
+.navbar-link {
+    text-decoration: none;
+    color: #F2EDE3;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    display: block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #5A4634;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    min-width: 180px;
+    z-index: 10;
+    list-style: none;
+    padding: 0.5rem 0;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu li {
+    margin: 0;
+}
+
+.dropdown-menu a {
+    padding: 0.5rem 1rem;
+    color: #F2EDE3;
+    text-decoration: none;
+    display: block;
+}
+
+.navbar-search {
+    margin-left: auto;
+}
+
+.search-input {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    background: #5A4634;
+    color: #F2EDE3;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    padding: 0.4rem 0.8rem;
+}
+
+.ul-search-result {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 0.5rem 0;
+    margin: 0;
+    position: absolute;
+    width: 100%;
+    z-index: 20;
+    top: 2.5rem;
+    left: 0;
+    color: #1C1C1C;
+}
+
+.li-search-result {
+    list-style: none;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s;
+}
+
+.span-search-result {
+    background: #F2EDE3;
+    color: #D63A1E;
+    font-weight: 600;
+}
+
+.li-search-result>a {
+    color: #D63A1E;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.search-input-div {
+    max-width: 400px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/*
+
+Resource page styles
+
+*/

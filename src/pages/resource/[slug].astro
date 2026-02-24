@@ -63,6 +63,15 @@ if (resource.folder === onePieceFolder) {
             {resource && <Icon resource={resource} />}
         </div>
 
+        <div>Backlinks</div>
+        <div>
+            {resource.backlinks.map((backlink) => (
+                <div>
+                    <span>{backlink.property}:
+                        <a href={`/resource/${backlink.slug}`}>{backlink.name}</a>
+                    </span>
+                </div>
+            ))}
         <div>Fiche de : {resource.name}!</div>
         <IntelligentText text={resource?.content} />
     </div>
