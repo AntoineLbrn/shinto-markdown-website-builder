@@ -1,3 +1,4 @@
+import type { genderPropertyValues } from '../consts';
 import type { BaseApiItem } from '../types/BaseApiItem';
 import type { JikanAPICharacter } from '../types/JikanAPI/JikanAPICharacter';
 import type { PokemonAPIPokemonParsed } from '../types/PokemonAPI/PokemonAPIPokemonParsed';
@@ -34,7 +35,6 @@ export async function getAstroStore() {
 
 const generateStoreBacklinks = (store: Store) => {
     store.vault.resources.forEach(resource => {
-        const backlinks: Backlink[] = [];
         const matches = [
             ...resource.content.matchAll(RESOURCE_LINK_REGEX).map(match => ({property: "content", match})),
             ...Object.entries(resource.data).map(([key, value]) => {
@@ -63,11 +63,10 @@ const generateStoreBacklinks = (store: Store) => {
                     r => r.slug === slugifyFromMarkdownWikilink(p1)
                 );
             }
-            if (linkedResource) {
-                backlinks.push({ name: linkedResource.name, slug: linkedResource.slug, property: match.property });
+            if (linkedResource && linkedResource.backlinks.every(b => b.slug !== resource.slug)) {
+                linkedResource.backlinks.push({ name: resource.name, slug: resource.slug, property: match.property });
             }
         }
-        resource.backlinks = backlinks;
     });
 }
 
@@ -80,7 +79,9 @@ export interface Backlink {
 export interface MarkdownVaultFile {
     name: string;
     content: string;
-    data: { [key: string]: any };
+    data: { 
+        [key: string]: any 
+    };
     folder: string;
     slug: string;
     backlinks: Backlink[];

@@ -1,0 +1,30 @@
+---
+import type { JikanAPICharacter } from '../../types/JikanAPI/JikanAPICharacter';
+import type { PokemonAPIPokemonParsed } from '../../types/PokemonAPI/PokemonAPIPokemonParsed';
+
+interface Props {
+    character: PokemonAPIPokemonParsed;
+}
+const { character }: { character: PokemonAPIPokemonParsed } = Astro.props;
+
+---
+<div class="font-semibold text-center">Fiche POKEMON</div>
+<div class="w-full flex justify-between">
+    <span class="font-semibold">Name</span>
+    <span>{character.nameEn}</span>
+</div>
+<div class="w-full flex justify-between">
+    <span class="font-semibold">Name JAP</span>
+    <span>{character.nameJa}</span>
+</div>
+<div class="w-full flex justify-between">
+    <span class="font-semibold">Name FR</span>
+    <span>{character.nameFr}</span>
+</div>
+<div class="w-full flex justify-between">
+    <span class="font-semibold">ID</span>
+    <span>{character.id}</span>
+</div>
+<a href={character.link} target="_blank">
+    <img src={character.sprite} alt={character.nameEn} />
+</a>

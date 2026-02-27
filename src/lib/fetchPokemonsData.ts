@@ -15,7 +15,8 @@ export const fetchPokemonsData = async (): Promise<PokemonAPIPokemonParsed[]> =>
             nameJa: pokemonSpecies.names.find(name => name.language.name === 'ja')?.name || null,
             sprite: detailledPokemon.sprites.front_default,
             color: pokemonSpecies.color.name,
-            id: detailledPokemon.id
+            id: detailledPokemon.id,
+            link: `https://pokeapi.co/api/v2/pokemon/${pokemon.name}/`
         });
     }
     return pokemonList;

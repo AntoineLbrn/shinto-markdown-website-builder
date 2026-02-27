@@ -1,19 +1,19 @@
 ---
+import GeanologicalTree from "../../components/GeanologicalTree.astro";
+import GenderIcon from "../../components/GenderIcon.astro";
 import Icon from "../../components/Icon.astro";
+import IntelligentExternalData from "../../components/IntelligentExternalData/IntelligentExternalData.astro";
 import IntelligentText from "../../components/IntelligentText.astro";
 import Properties from "../../components/Properties.astro";
 import {
-    jikanCharacterExternalIdKey,
-    narutoFolder,
-    onePieceFolder,
-    pokemonExternalIdKey,
-    pokemonFolder,
+    genderPropertyKey,
+    kanjiPropertyKey,
+    namePropertyKey,
 } from "../../consts";
 import Layout from "../../layouts/Layout.astro";
 import {
     getAstroStore,
     type MarkdownVaultFile,
-    getStoreApiItemSlug,
 } from "../../lib/astroDataStore";
 
 export function getStaticPaths() {
@@ -25,54 +25,47 @@ export function getStaticPaths() {
     });
 }
 
-const store = await getAstroStore();
 const { resource }: { resource: MarkdownVaultFile } = Astro.props;
-if (resource.folder === pokemonFolder) {
-    const slug = getStoreApiItemSlug(
-        store.pokemons.find(
-            (character) =>
-                character.nameEn == resource.data[pokemonExternalIdKey],
-        ),
-    );
-    if (slug) return Astro.redirect(`/pokemon/${slug}`);
-}
-if (resource.folder === narutoFolder) {
-    const slug = getStoreApiItemSlug(
-        store.naruto.find(
-            (character) =>
-                character.id == resource.data[jikanCharacterExternalIdKey],
-        ),
-    );
-    if (slug) return Astro.redirect(`/naruto/${slug}`);
-}
-if (resource.folder === onePieceFolder) {
-    const slug = getStoreApiItemSlug(
-        store.onePiece.find(
-            (character) =>
-                character.id == resource.data[jikanCharacterExternalIdKey],
-        ),
-    );
-    if (slug) return Astro.redirect(`/one-piece/${slug}`);
-}
+const nameKanji =
+    resource.data[kanjiPropertyKey] && resource.data[kanjiPropertyKey] != ""
+        ? " (" + resource.data[kanjiPropertyKey] + ")"
+        : "";
+const nameString = resource.data[namePropertyKey]
+    ? resource.data[namePropertyKey] + nameKanji
+    : resource.name;
 ---
 
 <Layout title={resource.name}>
     <div class="w-5/6 mx-auto mt-5">
+        <h3 class="text-4xl font-bold">{nameString}{resource.data[genderPropertyKey] ? <GenderIcon value={resource.data[genderPropertyKey]} /> : ''}</h3>
         <div class="inline-flex justify-between items-center w-full">
             {resource && <Properties resource={resource} />}
             {resource && <Icon resource={resource} />}
         </div>
+        <div class="w-full flex">
+            <div class="w-full">
+                <IntelligentText text={resource?.content} />
 
-        <div>Backlinks</div>
-        <div>
-            {resource.backlinks.map((backlink) => (
-                <div>
-                    <span>{backlink.property}:
-                        <a href={`/resource/${backlink.slug}`}>{backlink.name}</a>
-                    </span>
+                {
+                    resource.backlinks.map((backlink) => (
+                        <div>
+                            <span class="text-xs">
+                                {backlink.property}:
+                                <a href={`/resource/${backlink.slug}`}>
+                                    {backlink.name}
+                                </a>
+                            </span>
+                        </div>
+                    ))
+                }
+            </div>
+
+            <div class="flex w-1/5">
+                <div class="justify-end ">
+                    <IntelligentExternalData resource={resource} />
+                    <GeanologicalTree resource={resource} />
                 </div>
-            ))}
-        <div>Fiche de : {resource.name}!</div>
-        <IntelligentText text={resource?.content} />
+            </div>
+        </div>
     </div>
 </Layout>

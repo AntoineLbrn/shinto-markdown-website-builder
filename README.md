@@ -15,16 +15,11 @@ Tout le travail d'indexation et de recherche se trouve ici : https://drive.googl
 # Approche qualitative
 
 Tous les fichiers markdown peuvent être rendus tel quel par un composant d'affichage par défaut.
-Si jamais un type spécifique est trouvé (`Yokai`, `Pokemon`...), on fait appel à un composant d'affichage spécifique.
 
 TODO: 
-- générer les backlinks dans les objets ts
-- beautify moteur de recherche
-- beautify pages (utf8, markdown reader ...)
-- homepage
+- vue généalogique dans /resource
+- faire quelque chose de propre des backlinks
+- typer resources plutôt que faire en fonction du dossier (courage...)
 - Liens avec le YokaiDex
-- unicité slug, ajouter id ?
-
-## Pokemon
-- Récupération de la liste des Pokémon via PokeAPI.
+- homepage
 

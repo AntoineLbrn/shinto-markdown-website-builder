@@ -1,19 +1,21 @@
 ---
+import { genderPropertyKey, imagePropertyKey, jikanCharacterExternalIdKey, kanjiPropertyKey, namePropertyKey, pokemonExternalIdKey } from "../consts";
 import type { MarkdownVaultFile } from "../lib/astroDataStore";
 import IntelligentText from "./IntelligentText.astro";
 interface Props {
     resource: MarkdownVaultFile;
 }
 const { resource }: Props = Astro.props;
+const excludedKeys = [namePropertyKey, imagePropertyKey, kanjiPropertyKey, genderPropertyKey, jikanCharacterExternalIdKey, pokemonExternalIdKey];
 ---
 <div>
     <!-- Properties component. Displays list of FrontMatter properties, and format it for specific dataytype -->
-    <h2>Properties</h2>
     <ul>
         {Object.entries(resource.data).map(([key, value]) => (
+            excludedKeys.includes(key) ? null : (
             <li>
                 <strong>{key}:</strong> <IntelligentText text={Array.isArray(value) ? value.join(", ") : value + ""} /> 
-            </li>
+            </li>)
         ))}
     </ul>
 </div>

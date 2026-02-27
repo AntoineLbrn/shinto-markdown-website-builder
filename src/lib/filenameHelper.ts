@@ -1,6 +1,5 @@
 export const DIRECT_IMAGE_REGEX_LINK = /!\[\[([^\]]+)\]\]/g
 export const RESOURCE_LINK_REGEX = /\[\[([^\]]+)\]\]/g 
-export const IMAGE_KEY = "image";
 
 export const filenameToImageFileUrl = (filename: string) => {
     return `/img/${filename}`;

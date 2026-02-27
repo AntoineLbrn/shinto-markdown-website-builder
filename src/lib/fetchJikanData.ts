@@ -6,6 +6,7 @@ export const fetchJikanData = async (animeId: string): Promise<JikanAPICharacter
     return characterList.data.map(character => ({
         id: character.character.mal_id,
         nameEn: character.character.name,
-        sprite: character.character.images?.webp?.image_url || character.character.images?.jpg?.image_url || ""
+        sprite: character.character.images?.webp?.image_url || character.character.images?.jpg?.image_url || "",
+        link: character.character.url
     }));
 }

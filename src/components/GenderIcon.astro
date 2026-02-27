@@ -1,0 +1,22 @@
+---
+import { genderPropertyValues } from "../consts";
+
+interface Props {
+    value: string;
+}
+
+const { value }: Props = Astro.props;
+
+const isMale = value === genderPropertyValues.MALE;
+const color = isMale ? "#2196f3" : "#e91e63";
+
+// SVG: Mars for male, Venus for female
+
+const icon = isMale
+    ? `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;"><circle cx="10" cy="14" r="5" stroke="${color}" stroke-width="2"/><path d="M19 5L14 10" stroke="${color}" stroke-width="2"/><path d="M19 5H15M19 5V9" stroke="${color}" stroke-width="2"/></svg>`
+    : `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;"><circle cx="12" cy="8" r="5" stroke="${color}" stroke-width="2"/><path d="M12 13V21" stroke="${color}" stroke-width="2"/><path d="M9 18H15" stroke="${color}" stroke-width="2"/></svg>`;
+
+---
+<span class="gender-icon" style="display:inline-block;vertical-align:middle;line-height:1;">
+    <span set:html={icon}></span>
+</span>

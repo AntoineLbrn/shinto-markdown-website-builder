@@ -1,0 +1,22 @@
+---
+import { enfantsPropertyKey, parentsPropertyKey } from '../consts';
+import type { MarkdownVaultFile } from '../lib/astroDataStore';
+
+interface Props {
+    resource: MarkdownVaultFile;
+}
+const { resource }: Props = Astro.props;
+const parents = resource.data[parentsPropertyKey]
+const enfants = resource.data[enfantsPropertyKey]
+---
+<div>
+    parents : {parents}
+    enfants : {enfants}
+</div>
+<!--
+je fais des vues généalogiques avec Astro typescript. 
+plus tard j'aurais besoin d'une librairie très puissante pour générer des graph 
+mais là je voudrais juste un affichage simple hierarchique 
+avec des formes simples et cliquables car liens 
+(je pourrais même vanilla js avec des div mais flemme)
+ -->

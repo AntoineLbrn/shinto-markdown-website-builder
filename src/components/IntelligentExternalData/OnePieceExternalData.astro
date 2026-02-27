@@ -1,0 +1,21 @@
+---
+import type { JikanAPICharacter } from '../../types/JikanAPI/JikanAPICharacter';
+
+interface Props {
+    character: JikanAPICharacter;
+}
+const { character }: { character: JikanAPICharacter } = Astro.props;
+
+---
+<div class="font-semibold text-center">Fiche JIKAN</div>
+<div class="w-full flex justify-between">
+    <span class="font-semibold">Name</span>
+    <span>{character.nameEn}</span>
+</div>
+<div class="w-full flex justify-between">
+    <span class="font-semibold">ID</span>
+    <span>{character.id}</span>
+</div>
+<a href={character.link} target="_blank">
+    <img src={character.sprite} alt={character.nameEn} />
+</a>

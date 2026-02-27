@@ -22,7 +22,8 @@ async function getMarkdownFilesRecursively(dir: string): Promise<MarkdownVaultFi
                 slug: slugifyWithFolder(
                     path.dirname(fullPath).split(vaultFolderName)[1].replace(/^\/|\\/, ""),
                     path.parse(entry.name).name,
-                )
+                ),
+                backlinks: []
             });
         }
     }

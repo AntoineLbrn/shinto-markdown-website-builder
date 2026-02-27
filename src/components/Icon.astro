@@ -1,11 +1,12 @@
 ---
+import { imagePropertyKey } from "../consts";
 import type { MarkdownVaultFile } from "../lib/astroDataStore";
-import { filenameToImageFileUrl, IMAGE_KEY, wikiLinkToFilename } from "../lib/filenameHelper";
+import { filenameToImageFileUrl, wikiLinkToFilename } from "../lib/filenameHelper";
 interface Props {
     resource: MarkdownVaultFile;
 }
 const { resource }: Props = Astro.props;
 ---
 <div class="w-48">
-    {resource.data[IMAGE_KEY] && <img src={filenameToImageFileUrl(wikiLinkToFilename(resource.data[IMAGE_KEY]))} alt="Icon" />}
+    {resource.data[imagePropertyKey] && <img src={filenameToImageFileUrl(wikiLinkToFilename(resource.data[imagePropertyKey]))} alt="Icon" />}
 </div>

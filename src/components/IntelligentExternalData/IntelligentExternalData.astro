@@ -1,0 +1,50 @@
+---
+import {
+    jikanCharacterExternalIdKey,
+    narutoFolder,
+    onePieceFolder,
+    pokemonExternalIdKey,
+    pokemonFolder,
+} from "../../consts";
+import {
+    getAstroStore,
+    type MarkdownVaultFile,
+} from "../../lib/astroDataStore";
+import NarutoExternalData from "./NarutoExternalData.astro";
+import OnePieceExternalData from "./OnePieceExternalData.astro";
+import PokemonExternalData from "./PokemonExternalData.astro";
+
+const store = await getAstroStore();
+interface Props {
+    resource: MarkdownVaultFile;
+}
+const { resource }: Props = Astro.props;
+let onePieceCharacter;
+let pokemonCharacter;
+let narutoCharacter;
+if (resource.folder === pokemonFolder) {
+     pokemonCharacter = store.pokemons.find(
+        (character) =>
+            character.nameEn == resource.data[pokemonExternalIdKey],
+    );
+}
+if (resource.folder === narutoFolder) {
+    narutoCharacter = store.naruto.find(
+        (character) =>
+            character.id == resource.data[jikanCharacterExternalIdKey],
+    );
+}
+if (resource.folder === onePieceFolder) {
+    onePieceCharacter = store.onePiece.find(
+        (character) =>
+            character.id == resource.data[jikanCharacterExternalIdKey],
+    );
+}
+
+---
+
+<div>
+    {onePieceCharacter && <OnePieceExternalData character={onePieceCharacter} />}
+    {pokemonCharacter && <PokemonExternalData character={pokemonCharacter} />}
+    {narutoCharacter && <NarutoExternalData character={narutoCharacter} />}
+</div>
