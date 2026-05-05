@@ -9,6 +9,7 @@ export const kanjiPropertyKey: string = 'nom_kanji';
 export const genderPropertyKey: string = 'sexe';
 export const parentsPropertyKey: string = 'parents';
 export const enfantsPropertyKey: string = 'enfants'
+export const canvasColorPropertyKey: string = 'canvas-color';
 export enum genderPropertyValues {
     MALE = "male",
     FEMALE = "femelle"

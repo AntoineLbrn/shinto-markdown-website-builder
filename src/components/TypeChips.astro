@@ -1,0 +1,37 @@
+---
+import type { MarkdownVaultFile } from '../lib/astroDataStore';
+import IconByResourceType from './IconByResourceType.astro';
+
+interface Props {
+    resource: MarkdownVaultFile;
+}
+
+const { resource }: Props = Astro.props;
+
+
+const config = {
+  'pokemon': {
+    label: "Pokémon",
+    class: ""
+  },
+  'kami': {
+    label: "Kami",
+    class: ""
+  },
+  'conte': {
+    label: "Conte",
+    class: ""
+  },
+}
+
+const base =
+  "inline-flex items-center px-2 py-1 mb-5 align-top text-xs font-medium rounded-full whitespace-nowrap shadow-sm ring-1 ring-inset ring-black/5"
+
+type ResourceType = keyof typeof config;
+const type: ResourceType = Array.isArray(resource.data.type) ? resource.data.type[0] : resource.data.type;
+const chip = config[type];
+---
+
+{chip ? <span class={`${base} ${chip.class}`}>
+  <IconByResourceType type={type}/> &nbsp {chip.label}
+</span> : ""}

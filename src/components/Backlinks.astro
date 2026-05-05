@@ -1,0 +1,42 @@
+---
+import type { Backlink } from "../lib/astroDataStore";
+import IconByResourceType from "./IconByResourceType.astro";
+import PokeballIcon from "./PokeballIcon.astro";
+interface Props {
+    backlinks: Backlink[];
+}
+
+const { backlinks }: Props = Astro.props;
+const backlinksGroupedByType = backlinks.reduce(
+    (acc, backlink) => {
+        (acc[backlink.type] = acc[backlink.type] || []).push(backlink);
+        return acc;
+    },
+    {} as Record<string, Backlink[]>,
+);
+---
+
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+    {
+        Object.entries(backlinksGroupedByType).map(([type, group]) => (
+            <div class="mt-4" key={type}>
+                <div class="mb-2 text-xs font-bold uppercase flex items-center gap-1">
+                    <IconByResourceType type={type} />
+                    <span>{type}</span>
+                </div>
+                <div class="space-y-2">
+                    {group.map((backlink) => (
+                        <div>
+                            <span class="text-xs flex items-center gap-1">
+                                {backlink.property} :
+                                <a href={`/resource/${backlink.slug}`}>
+                                    {backlink.name}
+                                </a>
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        ))
+    }
+</div>

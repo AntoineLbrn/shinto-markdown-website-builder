@@ -1,0 +1,37 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import {
+    getAstroStore,
+} from "../../lib/astroDataStore";
+
+const store = await getAstroStore();
+const tales = store.vault.resources.filter((resource) => {
+    const t = resource.data.type;
+    return Array.isArray(t) ? t.includes("conte") : t === "conte";
+});
+
+
+---
+
+<Layout title="Récits">
+    <div class="w-5/6 mx-auto mt-10 content">
+        <h3 class="text-4xl">Récits</h3>
+        <p>
+            Que ce soit des légendes du folklore japonais, des récits consignés
+            dans le Kojiki ou le Nihon Shoki, explorez cette collection de
+            contes et légendes.
+        </p>
+        <ul>
+            {
+                tales.map((resource) => (
+                    <li>
+                        <a href={`/resource/${resource.slug}`}>
+                            {resource.name}
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+
+    </div>
+</Layout>

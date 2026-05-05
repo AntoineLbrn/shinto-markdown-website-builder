@@ -7,15 +7,20 @@ interface Props {
 const { character }: { character: JikanAPICharacter } = Astro.props;
 
 ---
+
 <div class="font-semibold text-center">Fiche JIKAN</div>
-<div class="w-full flex justify-between">
-    <span class="font-semibold">Name</span>
-    <span>{character.nameEn}</span>
+<div class="w-full flex flex-wrap gap-5 justify-center">
+    <div>
+        <div class="w-fit">
+            <span class="font-semibold mr-5">🇬🇧</span>
+            <span>{character.nameEn}</span>
+        </div>
+        <div class="w-fit">
+            <span class="font-semibold mr-5">ID</span>
+            <span>{character.id}</span>
+        </div>
+    </div>
+    <a href={character.link} target="_blank">
+        <img src={character.sprite} alt={character.nameEn} />
+    </a>
 </div>
-<div class="w-full flex justify-between">
-    <span class="font-semibold">ID</span>
-    <span>{character.id}</span>
-</div>
-<a href={character.link} target="_blank">
-    <img src={character.sprite} alt={character.nameEn} />
-</a>

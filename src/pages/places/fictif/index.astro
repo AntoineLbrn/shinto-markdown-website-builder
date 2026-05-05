@@ -1,0 +1,112 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { getAstroStore } from "../../../lib/astroDataStore";
+import Map from "../../../components/Map.astro";
+
+const store = await getAstroStore();
+const places = store.vault.resources.filter((resource) => {
+    const t = resource.data.type;
+    return Array.isArray(t) ? t.includes("lieu") : t === "lieu";
+});
+
+const fictifPlaces = places.filter((place) => {
+    const t = place.data.type;
+    return Array.isArray(t) ? t.includes("fictif") : t === "fictif";
+});
+
+function parseDMS(dms: any) {
+    if (!dms) return null;
+    
+    // Normalize the string: remove extra spaces, handle French
+    dms = dms.replace(/\s+/g, ' ').trim();
+    
+    // Helper to convert degrees, minutes, seconds to decimal
+    function dmsToDec(deg: string, min: string, sec: string, dir: string): number {
+        let dec = Number(deg) + (Number(min) || 0) / 60 + (Number(sec) || 0) / 3600;
+        if (dir === 'S' || dir === 'W' || dir === 'sud' || dir === 'ouest') dec = -dec;
+        return dec;
+    }
+    
+    // Try different regex patterns
+    const patterns = [
+        // Format: 36° 09′ 03″ N, 133° 10′ 56″ E or 34°10′58″N 133°04′51″E (with optional seconds)
+        /([\d.]+)[°\s]+([\d.]+)[′']?\s*([\d.]+)?[″"]?\s*([NSns]),?\s*([\d.]+)[°\s]+([\d.]+)[′']?\s*([\d.]+)?[″"]?\s*([EWew])/,
+        // Format: 35° 28′ nord, 133° 04′ est (French with words)
+        /([\d.]+)[°\s]+([\d.]+)?[′']?\s*(nord|sud|north|south),?\s*([\d.]+)[°\s]+([\d.]+)?[′']?\s*(est|ouest|east|west)/i,
+        // Format: 33° N, 131° E (degrees only)
+        /([\d.]+)[°]?\s*([NSns]),?\s*([\d.]+)[°]?\s*([EWew])/,
+    ];
+    
+    for (const pattern of patterns) {
+        const match = dms.match(pattern);
+        if (!match) continue;
+        
+        // Handle French format (pattern 1)
+        if (pattern === patterns[1]) {
+            const lat = dmsToDec(match[1], match[2] || '0', '0', match[3]);
+            const lng = dmsToDec(match[4], match[5] || '0', '0', match[6]);
+            return { lat, lng };
+        }
+        
+        // Handle degrees only (pattern 2)
+        if (pattern === patterns[2]) {
+            const lat = dmsToDec(match[1], '0', '0', match[2]);
+            const lng = dmsToDec(match[3], '0', '0', match[4]);
+            return { lat, lng };
+        }
+        
+        // Handle standard DMS format (pattern 0) - works for degrees+minutes, or degrees+minutes+seconds
+        if (pattern === patterns[0]) {
+            const lat = dmsToDec(match[1], match[2], match[3] || '0', match[4]);
+            const lng = dmsToDec(match[5], match[6], match[7] || '0', match[8]);
+            return { lat, lng };
+        }
+    }
+    
+    return null;
+}
+const mapPoints = fictifPlaces
+    .filter((place) => !!place.data.emplacement)
+    .map((place) => {
+        const coords = parseDMS(place.data.emplacement);
+        if (!coords) return null;
+        return { name: place.name, ...coords };
+    })
+    .filter(Boolean);
+
+console.log("Map points:", mapPoints);
+---
+
+<Layout title="Lieux">
+    <div class="w-5/6 mx-auto mt-10 content">
+        <h3 class="text-4xl">Lieux</h3>
+        <ul>
+            {
+                fictifPlaces
+                    .filter((place) => !!place.data.emplacement)
+                    .map((resource) => (
+                        <li>
+                            <a href={`/resource/${resource.slug}`}>
+                                {resource.name} - {resource.data.emplacement}
+                            </a>
+                        </li>
+                    ))
+            }
+        </ul>
+        Emplacement inconnu
+        <ul>
+            {
+                fictifPlaces
+                    .filter((place) => !place.data.emplacement)
+                    .map((resource) => (
+                        <li>
+                            <a href={`/resource/${resource.slug}`}>
+                                {resource.name}
+                            </a>
+                        </li>
+                    ))
+            }
+        </ul>
+        <Map points={mapPoints} />
+    </div>
+</Layout>

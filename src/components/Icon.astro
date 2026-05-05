@@ -7,6 +7,6 @@ interface Props {
 }
 const { resource }: Props = Astro.props;
 ---
-<div class="w-48">
+<div class="w-full">
     {resource.data[imagePropertyKey] && <img src={filenameToImageFileUrl(wikiLinkToFilename(resource.data[imagePropertyKey]))} alt="Icon" />}
 </div>

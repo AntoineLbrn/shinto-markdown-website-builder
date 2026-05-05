@@ -8,10 +8,18 @@ Encre Sumi : #1C1C1C
 Vert plantes sanctuaires mononoké : #556B2F
 Marron bois sanctuaires : #5A4634
 */
-body {
+html,body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    height: fit-content;
     background-color: #F2EDE3;
     color: #1C1C1C;
     font-weight: 300;
+}
+
+.content {
+    min-height: 80vh;
 }
 
 a {
@@ -138,8 +146,73 @@ Navbar styles
     position: relative;
 }
 
+
+/* Responsive styles for Navbar */
+
+
+.navbar-container {
+}
+
+.navbar-toggle {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: #F2EDE3;
+  cursor: pointer;
+  display: none;
+}
+
+
+@media (max-width: 767px) {
+
+  .navbar-toggle {
+    display: block;
+  }
+
+  .navbar-menu {
+    display: none;
+    flex-direction: column;
+    margin-top: 1rem;
+    gap: 1rem;
+  }
+
+  .navbar-menu.active {
+    display: flex;
+  }
+
+  .navbar-search {
+    width: 100%;
+  }
+}
 /*
 
-Resource page styles
+Footer styles
 
 */
+
+.footer {
+    width: 100%;
+    background: #556B2F;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem 1rem;
+    margin-top: 1.5rem;
+}
+
+.footer-text {
+    text-align: center;
+    color: #F2EDE3;
+    padding: 0.5rem 1rem;
+    display: block;
+}
+
+/*
+
+Other styles
+
+*/
+
+.inline-icon {
+  height: 1.5em;           /* scales with font-size */
+  width: auto;
+  vertical-align: -0.15em; /* optical alignment */
+}

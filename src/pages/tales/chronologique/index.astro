@@ -1,0 +1,88 @@
+---
+import Mermaid from "../../../components/Mermaid.astro";
+import Layout from "../../../layouts/Layout.astro";
+import {
+    getAstroStore,
+    slugifyFromMarkdownWikilink,
+    type MarkdownVaultFile,
+} from "../../../lib/astroDataStore";
+
+const store = await getAstroStore();
+const tales = store.vault.resources.filter((resource) => {
+    const t = resource.data.type;
+    return Array.isArray(t) ? t.includes("conte") : t === "conte";
+});
+
+// Helper: map by slug for quick lookup
+const talesBySlug = Object.fromEntries(tales.map((t) => [t.slug, t]));
+
+function orderTales(tales: MarkdownVaultFile[]): MarkdownVaultFile[] {
+    const bySlug = Object.fromEntries(tales.map((t) => [t.slug, t]));
+    const precedeMap = new Map();
+    const pursueMap = new Map();
+    tales.forEach((tale) => {
+        const precede = tale.data["précède"];
+        const pursue = tale.data["poursuit"];
+        if (precede && bySlug[precede]) precedeMap.set(tale.slug, precede);
+        if (pursue && bySlug[pursue]) pursueMap.set(tale.slug, pursue);
+    });
+    const allSlugs = new Set(tales.map((t) => t.slug));
+    const pursued = new Set([...pursueMap.values()]);
+    const starts = [...allSlugs].filter((slug) => !pursued.has(slug));
+    const ordered = [];
+    const visited = new Set();
+    for (const start of starts) {
+        let current = start;
+        while (current && !visited.has(current)) {
+            const tale = bySlug[current];
+            if (tale) ordered.push(tale);
+            visited.add(current);
+            current = precedeMap.get(current);
+        }
+    }
+    tales.forEach((tale) => {
+        if (!visited.has(tale.slug)) ordered.push(tale);
+    });
+    return ordered;
+}
+
+const orderedTales = orderTales(tales);
+
+// Mermaid chart for the first tale, using actual tale names
+let chart = "graph TD\n";
+if (orderedTales.length > 0) {
+    // Declare all nodes with their labels, escaping or removing parentheses
+    orderedTales.forEach((tale) => {
+        // Escape ( and ) for Mermaid, or remove them
+        const safeName = tale.name.replace(/[()]/g, "");
+        chart += `  ${tale.slug}([${safeName}])\n`;
+    });
+    // Draw edges for 'précède' and 'poursuit' relations (valid Mermaid syntax only)
+    orderedTales.forEach((tale) => {
+        if (tale.data["précède"]) {
+            const nextTale = talesBySlug[slugifyFromMarkdownWikilink(tale.data["précède"])];
+            const nextSlug = nextTale ? nextTale.slug : null;
+            if (nextSlug) chart += `  ${tale.slug} --> ${nextSlug}\n`;
+        }/*
+        if (tale.data["poursuit"]) {
+            const prevTale = talesBySlug[slugifyFromMarkdownWikilink(tale.data["poursuit"])];
+            const prevSlug = prevTale ? prevTale.slug : null;
+            if (prevSlug) chart += `  ${tale.slug} --> ${prevSlug}\n`;
+        }*/
+    });
+    // Add clickable nodes for each tale
+    orderedTales.forEach((tale) => {
+        chart += `  click ${tale.slug} \"/resource/${tale.slug}\" \"Voir le récit\"\n`;
+    });
+    // Highlight the first tale
+    chart += `  classDef current fill:#fca5a5,stroke:#b91c1c,stroke-width:3px,color:#1c1917;\n`;
+    chart += `  class ${orderedTales[0].slug} current;\n`;
+}
+---
+
+<Layout title="Récits, vue chronologique">
+    <div class="w-5/6 mx-auto mt-10 content">
+        <h3 class="text-4xl">Récits, vue chronologique</h3>
+        <Mermaid chart={chart} />
+    </div>
+</Layout>

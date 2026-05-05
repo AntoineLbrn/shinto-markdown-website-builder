@@ -1,22 +1,67 @@
 ---
 import { enfantsPropertyKey, parentsPropertyKey } from '../consts';
 import type { MarkdownVaultFile } from '../lib/astroDataStore';
+import Mermaid from './Mermaid.astro';
 
 interface Props {
     resource: MarkdownVaultFile;
 }
 const { resource }: Props = Astro.props;
-const parents = resource.data[parentsPropertyKey]
-const enfants = resource.data[enfantsPropertyKey]
+
+
+import { resourcePathToDisplayName, slugifyFromMarkdownWikilink } from '../lib/astroDataStore';
+import { RESOURCE_LINK_REGEX } from '../lib/filenameHelper';
+
+const parents = resource.data[parentsPropertyKey] || [];
+const enfants = resource.data[enfantsPropertyKey] || [];
+
+// Helper to extract label and slug from wikilink
+const parseWikilink = (wikilink: string) => {
+  const path = wikilink.replace(RESOURCE_LINK_REGEX, (match, p1) => {
+    return p1
+  });
+  const p1 = path;
+
+  const slug = slugifyFromMarkdownWikilink(p1);
+  const display = resourcePathToDisplayName(p1);
+  return {
+    label: display,
+    slug: slug
+  };
+};
+
+// Current node
+const currentSlug = resource.slug;
+const currentLabel = resource.name;
+
+// Build nodes for parents and enfants
+const parentNodes = (parents || []).map((p: string) => parseWikilink(p));
+const enfantNodes = (enfants || []).map((e: string) => parseWikilink(e));
+
+let chart = 'graph TD\n';
+// Parents --> current
+for (const parent of parentNodes) {
+  chart += `  ${parent.slug}([${parent.label}]) --> ${currentSlug}([${currentLabel}])\n`;
+}
+// Current --> enfants
+for (const enfant of enfantNodes) {
+  chart += `  ${currentSlug}([${currentLabel}]) --> ${enfant.slug}([${enfant.label}])\n`;
+}
+// Clickable nodes
+for (const node of [...parentNodes, {slug: currentSlug, label: currentLabel}, ...enfantNodes]) {
+  chart += `  click ${node.slug} "/resource/${node.slug}" \"Voir la ressource\"\n`;
+}
+
+// Mermaid styling: highlight current, color parents/children
+if (parentNodes.length > 0) {
+  chart += `  classDef parent fill:#fef9c3,stroke:#eab308,stroke-width:2px;\n`;
+  chart += parentNodes.map(p => `  class ${p.slug} parent;\n`).join('');
+}
+if (enfantNodes.length > 0) {
+  chart += `  classDef enfant fill:#fef9c3,stroke:#eab308,stroke-width:2px;\n`;
+  chart += enfantNodes.map(e => `  class ${e.slug} enfant;\n`).join('');
+}
+chart += `  classDef current fill:#fca5a5,stroke:#b91c1c,stroke-width:3px,color:#1c1917;\n`;
+chart += `  class ${currentSlug} current;\n`;
 ---
-<div>
-    parents : {parents}
-    enfants : {enfants}
-</div>
-<!--
-je fais des vues généalogiques avec Astro typescript. 
-plus tard j'aurais besoin d'une librairie très puissante pour générer des graph 
-mais là je voudrais juste un affichage simple hierarchique 
-avec des formes simples et cliquables car liens 
-(je pourrais même vanilla js avec des div mais flemme)
- -->
+<Mermaid chart={chart} />

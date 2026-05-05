@@ -18,8 +18,14 @@ Tous les fichiers markdown peuvent être rendus tel quel par un composant d'affi
 
 TODO: 
 - vue généalogique dans /resource
-- faire quelque chose de propre des backlinks
-- typer resources plutôt que faire en fonction du dossier (courage...)
+- navbar items
+- backlinks resourceType & linkType 
 - Liens avec le YokaiDex
 - homepage
 
+TODO cleanify obsidian : 
+- typer resources plutôt que faire en fonction du dossier (courage...)
+- nom technique pokemon
+- id jikan one piece
+- id jikan naruto
+- sortir les contes des wiki des persos #imo

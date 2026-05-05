@@ -1,0 +1,11 @@
+---
+import PokeballIcon from "./PokeballIcon.astro";
+
+interface Props {
+    type: string;
+}
+
+const { type }: Props = Astro.props;
+---
+
+{type === "pokemon" ? <PokeballIcon /> : type === "conte" ? "📜" : type === "kami" ? "⛩️" : type === "oni" ? "👹" : "🔗"}

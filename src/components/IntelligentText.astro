@@ -1,5 +1,5 @@
 ---
-import { slugifyFromMarkdownWikilink } from "../lib/astroDataStore";
+import { resourcePathToDisplayName, slugifyFromMarkdownWikilink } from "../lib/astroDataStore";
 import {
     DIRECT_IMAGE_REGEX_LINK,
     filenameToImageFileUrl,
@@ -14,7 +14,7 @@ const { text }: Props = Astro.props;
 
 function renderIntelligentText(raw: string): string {
     let html = raw.replace(DIRECT_IMAGE_REGEX_LINK, (match, p1) => {
-        const filename = p1.trim();
+        const filename = p1.split("/").pop()
         // Try to guess if it's an image (png, jpg, jpeg, gif, svg, webp)
         if (filename.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i)) {
             return `<img src="/img/${filename}" alt="${filename}" style="max-width:100%;" />`;
@@ -30,9 +30,9 @@ function renderIntelligentText(raw: string): string {
         }
 
         const slug = slugifyFromMarkdownWikilink(p1);
-
+        const display = resourcePathToDisplayName(p1);
         // Display only filaneme without extension and path
-        return `<a href="/resource/${slug}">${p1.split("|")[0].split("/").pop()}</a>`;
+        return `<a href="/resource/${slug}">${display}</a>`;
     });
     // Bold: **text** => <strong>text</strong>
     html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");

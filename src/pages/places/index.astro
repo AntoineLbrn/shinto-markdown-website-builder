@@ -1,0 +1,35 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import {
+    getAstroStore,
+} from "../../lib/astroDataStore";
+
+const store = await getAstroStore();
+const tales = store.vault.resources.filter((resource) => {
+    const t = resource.data.type;
+    return Array.isArray(t) ? t.includes("lieu") : t === "lieu";
+});
+
+
+---
+
+<Layout title="Lieux">
+    <div class="w-5/6 mx-auto mt-10 content">
+        <h3 class="text-4xl">Lieux</h3>
+        <p>
+            Voici tous les lieux consignées dans les ressources, qu'ils soient mythiques ou historiques. Cliquez sur un lieu pour en savoir plus à son sujet, ses caractéristiques, et les récits qui s'y déroulent.
+        </p>
+        <ul>
+            {
+                tales.map((resource) => (
+                    <li>
+                        <a href={`/resource/${resource.slug}`}>
+                            {resource.name}
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+
+    </div>
+</Layout>

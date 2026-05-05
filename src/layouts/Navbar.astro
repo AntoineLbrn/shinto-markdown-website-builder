@@ -1,0 +1,63 @@
+---
+import SearchBar from "../components/SearchBar.astro";
+---
+
+<nav class="navbar">
+	<div class="navbar-container">
+		<button class="navbar-toggle" aria-label="Ouvrir le menu"> ☰ </button>
+
+		<ul class="navbar-menu">
+			<li class="navbar-item">
+				<a href="/" class="navbar-link">Accueil</a>
+			</li>
+			<li class="navbar-item dropdown">
+				<a href="#" class="navbar-link">Shinto</a>
+				<ul class="dropdown-menu">
+					<li><a href="/shinto/kami">Kami</a></li>
+					<li><a href="/shinto/oni">Oni</a></li>
+					<li><a href="/shinto/yokai">Yokai</a></li>
+					<li><a href="/shinto/human">Humain</a></li>
+				</ul>
+			</li>
+			<li class="navbar-item dropdown">
+				<a href="/tales" class="navbar-link">Récits</a>
+				<ul class="dropdown-menu">
+					<li><a href="/tales/chronologique">Chronologique</a></li>
+					<li><a href="/tales/geographique">Géographique</a></li>
+				</ul>
+			</li>
+			<li class="navbar-item dropdown">
+				<a href="/places" class="navbar-link">Lieux</a>
+				<ul class="dropdown-menu">
+					<li><a href="/places/fictif">Fictif</a></li>
+				</ul>
+			</li>
+			<li class="navbar-item dropdown">
+				<a href="#" class="navbar-link">Pop culture</a>
+				<ul class="dropdown-menu">
+					<li><a href="/pop/pokemon">Pokemon</a></li>
+					<li><a href="/pop/naruto">Naruto</a></li>
+					<li><a href="/pop/onepiece">One piece</a></li>
+				</ul>
+			</li>
+			<li class="navbar-item navbar-search">
+				<SearchBar />
+			</li>
+		</ul>
+		<div class="navbar-container"></div>
+		<script>
+			const toggle = document.querySelector(".navbar-toggle");
+			const menu = document.querySelector(".navbar-menu");
+
+			toggle?.addEventListener("click", () => {
+				menu?.classList.toggle("active");
+			});
+
+			document.querySelectorAll(".dropdown-toggle").forEach((btn) => {
+				btn.addEventListener("click", () => {
+					btn.parentElement?.classList.toggle("open");
+				});
+			});
+		</script>
+	</div>
+</nav>

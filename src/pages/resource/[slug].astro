@@ -1,15 +1,18 @@
 ---
+import Backlinks from "../../components/Backlinks.astro";
 import GeanologicalTree from "../../components/GeanologicalTree.astro";
 import GenderIcon from "../../components/GenderIcon.astro";
 import Icon from "../../components/Icon.astro";
 import IntelligentExternalData from "../../components/IntelligentExternalData/IntelligentExternalData.astro";
 import IntelligentText from "../../components/IntelligentText.astro";
 import Properties from "../../components/Properties.astro";
+import TypeChips from "../../components/TypeChips.astro";
 import {
     genderPropertyKey,
     kanjiPropertyKey,
     namePropertyKey,
 } from "../../consts";
+import Divider from "../../layouts/Divider.astro";
 import Layout from "../../layouts/Layout.astro";
 import {
     getAstroStore,
@@ -36,36 +39,32 @@ const nameString = resource.data[namePropertyKey]
 ---
 
 <Layout title={resource.name}>
-    <div class="w-5/6 mx-auto mt-5">
-        <h3 class="text-4xl font-bold">{nameString}{resource.data[genderPropertyKey] ? <GenderIcon value={resource.data[genderPropertyKey]} /> : ''}</h3>
-        <div class="inline-flex justify-between items-center w-full">
-            {resource && <Properties resource={resource} />}
-            {resource && <Icon resource={resource} />}
-        </div>
+    <div class="w-5/6 mx-auto mt-10 content">
         <div class="w-full flex">
-            <div class="w-full">
-                <IntelligentText text={resource?.content} />
-
-                {
-                    resource.backlinks.map((backlink) => (
-                        <div>
-                            <span class="text-xs">
-                                {backlink.property}:
-                                <a href={`/resource/${backlink.slug}`}>
-                                    {backlink.name}
-                                </a>
-                            </span>
-                        </div>
-                    ))
-                }
-            </div>
-
-            <div class="flex w-1/5">
-                <div class="justify-end ">
+            <div class="flex-1 min-w-0">
+                <div class="float-end m-5 w-1/3">
+                    <Icon resource={resource} />
                     <IntelligentExternalData resource={resource} />
                     <GeanologicalTree resource={resource} />
                 </div>
+                <h3 class="text-4xl font-bold">
+                    {nameString}{
+                        resource.data[genderPropertyKey] ? (
+                            <GenderIcon
+                                value={resource.data[genderPropertyKey]}
+                            />
+                        ) : (
+                            ""
+                        )
+                    }
+                    <TypeChips resource={resource} />
+                </h3>
+
+                <Properties resource={resource} />
+                <IntelligentText text={resource?.content} />
             </div>
         </div>
+                <Divider />
+                <Backlinks backlinks={resource.backlinks} />
     </div>
 </Layout>
